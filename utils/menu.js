@@ -1,5 +1,5 @@
 const { prompt } = require("inquirer");
-const db = require("../db/connection");
+const query = require("./queries");
 require("console.table");
 
 const mainMenu = async () => {
@@ -13,16 +13,16 @@ const mainMenu = async () => {
   ]);
   switch (choice) {
     case "View":
-      viewEmployees();
+      optionsView();
       break;
     case "Add":
-      addMenu();
+      optionsAdd();
       break;
     case "Update":
-      updateMenu();
+      optionsUpdate();
       break;
     case "Delete":
-      deleteMenu();
+      optionsDelete();
       break;
     case "Exit":
     default:
@@ -30,14 +30,116 @@ const mainMenu = async () => {
   }
 };
 
-const viewMenu = async () => {};
-const viewEmployees = async () => {
-  const [employeeData] = await db.query(`SELECT * FROM employees`);
-  console.table(employeeData);
+const optionsView = async () => {
+  const { choice } = await prompt([
+    {
+      type: "list",
+      name: "choice",
+      message: "What would you like to view?",
+      choices: [
+        {
+          name: "All departments",
+          value: `SELECT * FROM departments`,
+        },
+        {
+          name: "All roles",
+          value: "roles",
+        },
+        {
+          name: "All employees",
+          value: "employees",
+        },
+        {
+          name: "All employees by manager",
+          value: "employeesManager",
+        },
+        {
+          name: "All employees by department",
+          value: "employeesDepartments",
+        },
+        {
+          name: "Total budget by department",
+          value: "totalBudgetByDepartment",
+        },
+      ],
+    },
+  ]);
+  console.log(choice);
   mainMenu();
 };
-const addMenu = async () => {};
-const updateMenu = async () => {};
-const deleteMenu = async () => {};
+
+const optionsAdd = async () => {
+  const { choice } = await prompt([
+    {
+      type: "list",
+      name: "choice",
+      message: "What would you like to add?",
+      choices: [
+        {
+          name: "A new department",
+          value: "newDepartment",
+        },
+        {
+          name: "A new role",
+          value: "newRole",
+        },
+        {
+          name: "A new employee",
+          value: "newEmployee",
+        },
+      ],
+    },
+  ]);
+  console.log(choice);
+  mainMenu();
+};
+
+const optionsUpdate = async () => {
+  const { choice } = await prompt([
+    {
+      type: "list",
+      name: "choice",
+      message: "What would you like to update?",
+      choices: [
+        {
+          name: "An employee's role",
+          value: "changeEmployeeRole",
+        },
+        {
+          name: "An employee's manager",
+          value: "changeEmployeeManager",
+        },
+      ],
+    },
+  ]);
+  console.log(choice);
+  mainMenu();
+};
+
+const optionsDelete = async () => {
+  const { choice } = await prompt([
+    {
+      type: "list",
+      name: "choice",
+      message: "What would you like to delete?",
+      choices: [
+        {
+          name: "A department",
+          value: "removeDepartment",
+        },
+        {
+          name: "A role",
+          value: "removeRole",
+        },
+        {
+          name: "An employee",
+          value: "removeEmployee",
+        },
+      ],
+    },
+  ]);
+  console.log(choice);
+  mainMenu();
+};
 
 module.exports = mainMenu;
