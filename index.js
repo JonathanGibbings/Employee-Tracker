@@ -1,3 +1,3 @@
-const menu = require("./utils/menu");
+const menu = require("./utils/menus");
 
 menu();

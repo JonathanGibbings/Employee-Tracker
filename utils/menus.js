@@ -1,5 +1,5 @@
 const { prompt } = require("inquirer");
-const query = require("./queries");
+const query = require("./queries/queries");
 require("console.table");
 
 const mainMenu = async () => {
@@ -37,35 +37,40 @@ const optionsView = async () => {
       name: "choice",
       message: "What would you like to view?",
       choices: [
-        {
-          name: "All departments",
-          value: `SELECT * FROM departments`,
-        },
-        {
-          name: "All roles",
-          value: "roles",
-        },
-        {
-          name: "All employees",
-          value: "employees",
-        },
-        {
-          name: "All employees by manager",
-          value: "employeesManager",
-        },
-        {
-          name: "All employees by department",
-          value: "employeesDepartments",
-        },
-        {
-          name: "Total budget by department",
-          value: "totalBudgetByDepartment",
-        },
+        "All departments",
+        "All roles",
+        "All employees",
+        "All employees by manager",
+        "All employees by department",
+        "Total budget by department",
+        "Return",
       ],
     },
   ]);
-  console.log(choice);
-  mainMenu();
+  switch (choice) {
+    case "All departments":
+      query.view.departments().then(mainMenu);
+      break;
+    case "All roles":
+      query.view.roles().then(mainMenu);
+      break;
+    case "All employees":
+      query.view.employees().then(mainMenu);
+      break;
+    case "All employees by manager":
+      query.view.employeesByManager().then(mainMenu);
+      break;
+    case "All employees by department":
+      query.view.employeesByDepartment().then(mainMenu);
+      break;
+    case "Total budget by department":
+      query.view.budgetByDepartment().then(mainMenu);
+      break;
+    case "Return":
+    default:
+      mainMenu();
+      break;
+  }
 };
 
 const optionsAdd = async () => {
