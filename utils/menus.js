@@ -74,29 +74,122 @@ const optionsView = async () => {
 };
 
 const optionsAdd = async () => {
-  const { choice } = await prompt([
+  const param = await prompt([
+    // question for type of add
     {
       type: "list",
       name: "choice",
       message: "What would you like to add?",
-      choices: [
-        {
-          name: "A new department",
-          value: "newDepartment",
-        },
-        {
-          name: "A new role",
-          value: "newRole",
-        },
-        {
-          name: "A new employee",
-          value: "newEmployee",
-        },
-      ],
+      choices: ["A new department", "A new role", "A new employee", "Return"],
+    },
+    // questions for new department
+    {
+      type: "input",
+      name: "department",
+      message: "What is the name of the department?",
+      when: ({ choice }) => choice === "A new department",
+      validate: (input) => {
+        if (input) {
+          return true;
+        } else {
+          console.log(" Please enter a department name");
+          return false;
+        }
+      },
+    },
+    // questions for new role
+    {
+      type: "input",
+      name: "role",
+      message: "What is the name of the role?",
+      when: ({ choice }) => choice === "A new role",
+      validate: (input) => {
+        if (input) {
+          return true;
+        } else {
+          console.log(" Please enter a role name");
+          return false;
+        }
+      },
+    },
+    {
+      type: "input",
+      name: "salary",
+      message: "What is the salary of the role?",
+      when: ({ choice }) => choice === "A new role",
+      validate: (input) => {
+        if (!isNaN(parseInt(input))) {
+          return true;
+        } else {
+          console.log(" Please enter a salary number");
+          return false;
+        }
+      },
+    },
+    {
+      type: "list",
+      name: "department",
+      message: "What is the department of the role?",
+      choices: await query.get.departments(),
+      when: ({ choice }) => choice === "A new role",
+    },
+    // questions for new employee
+    {
+      type: "input",
+      name: "firstName",
+      message: "What is the first name of the employee?",
+      when: ({ choice }) => choice === "A new employee",
+      validate: (input) => {
+        if (input) {
+          return true;
+        } else {
+          console.log("Please enter the employee's first name");
+          return false;
+        }
+      },
+    },
+    {
+      type: "input",
+      name: "lastName",
+      message: "What is the last name of the employee?",
+      when: ({ choice }) => choice === "A new employee",
+      validate: (input) => {
+        if (input) {
+          return true;
+        } else {
+          console.log("Please enter the employee's last name");
+          return false;
+        }
+      },
+    },
+    {
+      type: "list",
+      name: "role",
+      message: "What is the role of the employee?",
+      choices: await query.get.roles(),
+      when: ({ choice }) => choice === "A new employee",
+    },
+    {
+      type: "list",
+      name: "manager",
+      message: "Who is the manager of the employee?",
+      choices: await query.get.employees(),
+      when: ({ choice }) => choice === "A new employee",
     },
   ]);
-  console.log(choice);
-  mainMenu();
+  switch (param.choice) {
+    case "A new department":
+      const { department } = param;
+      query.add.department(department).then(mainMenu);
+      console.log(`Added department: ${department}`);
+      break;
+    case "A new role":
+    case "A new employee":
+    case "Return":
+    default:
+      mainMenu();
+      break;
+  };
 };
 
 const optionsUpdate = async () => {
