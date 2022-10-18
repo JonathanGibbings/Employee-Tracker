@@ -80,6 +80,7 @@ const employeesByDepartment = async () => {
                 ORDER BY department;`);
   console.table(employees);
 };
+
 const budgetByDepartment = async () => {
   const [departments] =
     await db.query(`SELECT departments.id, departments.department_name,
