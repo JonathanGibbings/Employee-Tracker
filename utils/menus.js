@@ -268,14 +268,16 @@ const optionsDelete = async () => {
     {
       type: "list",
       name: "department",
-      message: "Which department would you like to delete?",
+      message: `Which department would you like to delete?
+WARNING: will remove all related roles and employees!`,
       choices: await query.get.departments(),
       when: ({ choice }) => choice === "A department",
     },
     {
       type: "list",
       name: "role",
-      message: "Which role would you like to delete?",
+      message: `Which role would you like to delete?
+WARNING: will remove all related employees!`,
       choices: await query.get.roles(),
       when: ({ choice }) => choice === "A role",
     },
