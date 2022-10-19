@@ -125,10 +125,11 @@ const optionsAdd = async () => {
           return false;
         }
       },
+      filter: (input) => parseInt(input),
     },
     {
       type: "list",
-      name: "department",
+      name: "departmentId",
       message: "What is the department of the role?",
       choices: await query.get.departments(),
       when: ({ choice }) => choice === "A new role",
@@ -164,7 +165,7 @@ const optionsAdd = async () => {
     },
     {
       type: "list",
-      name: "role",
+      name: "roleId",
       message: "What is the role of the employee?",
       choices: await query.get.roles(),
       when: ({ choice }) => choice === "A new employee",
@@ -173,7 +174,7 @@ const optionsAdd = async () => {
       type: "list",
       name: "manager",
       message: "Who is the manager of the employee?",
-      choices: await query.get.employees(),
+      choices: [{ name: "None", value: null }].concat(await query.get.employees()),
       when: ({ choice }) => choice === "A new employee",
     },
   ]);
@@ -184,7 +185,15 @@ const optionsAdd = async () => {
       console.log(`Added department: ${department}`);
       break;
     case "A new role":
+      const { role, salary, departmentId } = param;
+      query.add.role(role, salary, departmentId).then(mainMenu)
+      console.log(`Added role ${role}`);
+      break;
     case "A new employee":
+      const { firstName, lastName, roleId, manager } = param;
+      query.add.employee(firstName, lastName, roleId, manager).then(mainMenu);
+      console.log(`Added employee ${firstName} ${lastName}`);
+      break;
     case "Return":
     default:
       mainMenu();
@@ -193,51 +202,52 @@ const optionsAdd = async () => {
 };
 
 const optionsUpdate = async () => {
-  const { choice } = await prompt([
+  const param = await prompt([
     {
       type: "list",
       name: "choice",
       message: "What would you like to update?",
-      choices: [
-        {
-          name: "An employee's role",
-          value: "changeEmployeeRole",
-        },
-        {
-          name: "An employee's manager",
-          value: "changeEmployeeManager",
-        },
-      ],
+      choices: ["An employee's role", "An employee's manager", "Return"],
     },
   ]);
-  console.log(choice);
-  mainMenu();
+  switch (param.choice) {
+    case "An employee's role":
+      mainMenu();
+      break;
+    case "An employee's manager":
+      mainMenu();
+      break;
+    case "Return":
+    default:
+      mainMenu();
+      break;
+  };
 };
 
 const optionsDelete = async () => {
-  const { choice } = await prompt([
+  const param = await prompt([
     {
       type: "list",
       name: "choice",
       message: "What would you like to delete?",
-      choices: [
-        {
-          name: "A department",
-          value: "removeDepartment",
-        },
-        {
-          name: "A role",
-          value: "removeRole",
-        },
-        {
-          name: "An employee",
-          value: "removeEmployee",
-        },
-      ],
+      choices: ["A department", "A role", "An employee", "Return"],
     },
   ]);
-  console.log(choice);
-  mainMenu();
+  switch (param.choice) {
+    case "A department":
+      mainMenu();
+      break;
+    case "A role":
+      mainMenu();
+      break;
+    case "An employee":
+      mainMenu();
+      break;
+    case "Return":
+    default:
+      mainMenu();
+      break;
+  };
 };
 
 module.exports = mainMenu;
