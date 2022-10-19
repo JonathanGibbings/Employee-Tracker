@@ -1,5 +1,6 @@
 const { prompt } = require("inquirer");
 const query = require("./queries/queries");
+const { employeeManager } = require("./queries/update");
 require("console.table");
 
 const mainMenu = async () => {
@@ -209,13 +210,45 @@ const optionsUpdate = async () => {
       message: "What would you like to update?",
       choices: ["An employee's role", "An employee's manager", "Return"],
     },
+    {
+      type: "list",
+      name: "employeeRole",
+      message: "Which employee would you like to update?",
+      choices: await query.get.employees(),
+      when: ({ choice }) => choice === "An employee's role",
+    },
+    {
+      type: "list",
+      name: "newRole",
+      message: "What is the new role of the employee?",
+      choices: await query.get.roles(),
+      when: ({ choice }) => choice === "An employee's role",
+    },
+    {
+      type: "list",
+      name: "employeeManager",
+      message: "Which employee would you like to update?",
+      choices: await query.get.employees(),
+      when: ({ choice }) => choice === "An employee's manager",
+    },
+    {
+      type: "list",
+      name: "newManager",
+      message: "Who is the new manager of the employee?",
+      choices: await query.get.employees(),
+      when: ({ choice }) => choice === "An employee's manager",
+    },
   ]);
   switch (param.choice) {
     case "An employee's role":
-      mainMenu();
+      const { employeeRole, newRole } = param;
+      query.update.employeeRole(employeeRole, newRole).then(mainMenu);
+      console.log(`Updated employee's role`);
       break;
     case "An employee's manager":
-      mainMenu();
+      const { employeeManager, newManager } = param;
+      query.update.employeeManager(employeeManager, newManager).then(mainMenu);
+      console.log(`Updated employee's manager`);
       break;
     case "Return":
     default:
@@ -232,16 +265,43 @@ const optionsDelete = async () => {
       message: "What would you like to delete?",
       choices: ["A department", "A role", "An employee", "Return"],
     },
+    {
+      type: "list",
+      name: "department",
+      message: "Which department would you like to delete?",
+      choices: await query.get.departments(),
+      when: ({ choice }) => choice === "A department",
+    },
+    {
+      type: "list",
+      name: "role",
+      message: "Which role would you like to delete?",
+      choices: await query.get.roles(),
+      when: ({ choice }) => choice === "A role",
+    },
+    {
+      type: "list",
+      name: "employee",
+      message: "Which employee would you like to delete?",
+      choices: await query.get.employees(),
+      when: ({ choice }) => choice === "An employee",
+    },
   ]);
   switch (param.choice) {
     case "A department":
-      mainMenu();
+      const { department } = param;
+      query.remove.department(department).then(mainMenu);
+      console.log(`Removed department`);
       break;
     case "A role":
-      mainMenu();
+      const { role } = param;
+      query.remove.role(role).then(mainMenu);
+      console.log(`Removed role`);
       break;
     case "An employee":
-      mainMenu();
+      const { employee } = param;
+      query.remove.employee(employee).then(mainMenu);
+      console.log(`Removed employee`);
       break;
     case "Return":
     default:
