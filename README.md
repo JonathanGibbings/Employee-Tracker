@@ -22,7 +22,7 @@ Run the application from the command line in the folder index.js is in. Run it w
 
 ## Tutorial Video
 
-<video src='https://drive.google.com/file/d/1UHxnBHyM0zXbP1kBqn0iUxExHKfNPvD5/view' width=300></video>
+<video src='./assets/imgs/employee-tracker-tutorial.mp4' width=300></video>
 
 [![Tutorial Video](./assets/imgs/employee-tracker-screenshot.png)](https://drive.google.com/file/d/1UHxnBHyM0zXbP1kBqn0iUxExHKfNPvD5/view)
 
